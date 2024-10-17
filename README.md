@@ -2,6 +2,10 @@
 
 This is an experiment to see how much of sync and send from Rust/Swift can be implemented in C++ and what problems arise when we try to do so. Is there anything we can learn about thread safety from these approaches.
 
+- The main sync/send concepts are in [sync_send.h](sync_send.h)
+- They are used in [safe_thread.h](safe_thread.h)
+- They are tested in [tests](tests)
+
 ###### *Safe is the goal of the project, not the current status 
 
 ### 💡Key Ideas:

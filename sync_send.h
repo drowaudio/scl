@@ -15,29 +15,29 @@
     code that the intent is to share it.
  */
 template<typename T>
-class this_wrapper
+class unchecked_pointer
 {
 public:
-    this_wrapper (nullptr_t) = delete;
+    unchecked_pointer (nullptr_t) = delete;
 
-    this_wrapper (T* p)
-        : this_pointer (p) {
+    unchecked_pointer (T* p)
+        : pointer (p) {
     }
 
-    this_wrapper (T& p)
-        : this_pointer (*p) {
+    unchecked_pointer (T& p)
+        : pointer (*p) {
     }
 
     T& operator*() const {
-        return *this_pointer;
+        return *pointer;
     }
 
     T* operator->() const {
-        return this_pointer;
+        return pointer;
     }
 
 private:
-    T* this_pointer;
+    T* pointer;
 };
 
 
@@ -130,11 +130,11 @@ template <typename T>
 struct is_send : std::integral_constant<
                     bool,
                     (! (std::is_lvalue_reference_v<T>
-                        || std::is_pointer_v<std::remove_extent_t<T>>
+                        || (std::is_pointer_v<std::remove_extent_t<T>>
+                            && ! is_function_pointer_v<std::decay_t<T>>)  // This shouldn't include non-member function pointers
                         || is_lambda_v<T>))
                     &&
-                    (std::is_pod_v<T>
-                     || std::is_move_constructible_v<T>
+                    (std::is_move_constructible_v<T>
                      || (is_function_pointer_v<std::decay_t<T>>
                          && ! std::is_member_function_pointer_v<T>)
                      || is_sync_v<T>)>
@@ -176,12 +176,15 @@ struct is_send : std::integral_constant<
 // struct is_send<const T&> : std::false_type {};
 
 // Additionally, shared_ptrs to types that are sync are send
-template<typename T>
-struct is_send<std::shared_ptr<T>> : std::integral_constant<
-                                        bool,
-                                        is_sync_v<T>>
-{};
+// template<typename T>
+// struct is_send<std::shared_ptr<T>> : std::integral_constant<
+//                                         bool,
+//                                         is_sync_v<T>>
+// {};
 
+template<sync T>
+struct is_send<std::shared_ptr<T>> : std::true_type
+{};
 
 template<typename T>
 inline constexpr bool is_send_v = is_send<T>::value;
@@ -196,6 +199,7 @@ concept send = is_send<T>::value;
 //======================================================
 static_assert(is_send_v<const int>);
 static_assert(is_send_v<int>);
+static_assert(is_send_v<int&&>);
 static_assert(! is_send_v<int&>);
 static_assert(! is_send_v<int*&>);
 static_assert(! is_send_v<const int&>);
@@ -204,6 +208,7 @@ static_assert(! is_send_v<std::string&>);
 static_assert(! is_send_v<const std::string&>);
 static_assert(! is_send_v<std::string*&>);
 static_assert(! is_send_v<const std::string*&>);
+static_assert(is_send_v<void (*)(int)>);
 
 static_assert(! is_sync_v<int>);
 static_assert(! is_sync_v<int&>);

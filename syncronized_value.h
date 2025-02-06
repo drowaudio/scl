@@ -75,3 +75,17 @@ void test_multi() {
     assert(apply(get, c) == 4);
 }
 
+#include <string>
+
+struct person
+{
+    std::string get_name() const;
+    void set_name (std::string);
+
+    std::string name;
+};
+
+template<>
+struct is_sync<person> : std::true_type {};
+
+static_assert(is_send_v<person>);

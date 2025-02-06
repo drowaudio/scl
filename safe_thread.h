@@ -28,12 +28,13 @@ public:
         // N.B. We can't constrain F to the concept due to recursion
         // We also have to explcitly allow non-member function pointers as
         // these aren't found via the send trait for some reason
-        static_assert((is_function_pointer_v<std::decay_t<std::decay_t<F>>>
-                       && ! std::is_member_function_pointer_v<std::decay_t<F>>)
-                      || is_send_v<std::decay_t<F>>);
+        // static_assert((is_function_pointer_v<std::decay_t<std::decay_t<F>>>
+        //                && ! std::is_member_function_pointer_v<std::decay_t<F>>)
+        //               || is_send_v<std::decay_t<F>>);
 
         // This is what we really want to say, in a concept
         // static_assert (is_send_v<std::decay_t<F>>);
+        static_assert (send<std::decay_t<F>>);
     }
 
     safe_thread (safe_thread&& other)

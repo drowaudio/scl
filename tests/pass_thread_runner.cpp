@@ -12,11 +12,11 @@ class thread_runner
 public:
     thread_runner()
     {
-        std::mem_fn (&thread_runner::run) (this_wrapper<thread_runner> (this));
+        std::mem_fn (&thread_runner::run) (unchecked_pointer<thread_runner> (this));
 
         // static_assert(is_send_v<decltype(std::mem_fn (&thread_runner::run))>);
         // static_assert(is_send_v<std::decay_t<decltype(std::mem_fn (&thread_runner::run))>>);
-        thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), this_wrapper (this));
+        thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), unchecked_pointer (this));
         // thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), this_wrapper<const thread_runner> (const_cast<const thread_runner*> (this)));
         // thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), const_cast<const thread_runner*> (this));
     }

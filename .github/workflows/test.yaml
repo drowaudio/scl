@@ -28,8 +28,8 @@ jobs:
         shell: bash
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
-            export CC=/usr/bin/gcc-14
-            export CXX=/usr/bin/g++-14
+            export CC=/usr/bin/gcc-14.2
+            export CXX=/usr/bin/g++-14.2
             gcc -v
             g++ -v
           fi

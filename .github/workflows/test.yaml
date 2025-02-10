@@ -27,12 +27,10 @@ jobs:
       - name: Configure & Build
         shell: bash
         run: |
-          if [ "$OSTYPE" = "linux-gnu" ]; then
             export CC=/usr/bin/gcc-14
             export CXX=/usr/bin/g++-14
             gcc -v
             g++ -v
-          fi
 
           cmake -B build_dir -DCMAKE_BUILD_TYPE=${{ matrix.build_config }}
           cmake --build build_dir --config ${{ matrix.build_config }}

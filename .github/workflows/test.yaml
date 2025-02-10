@@ -27,8 +27,7 @@ jobs:
       - name: Configure & Build
         shell: bash
         run: |
-          echo OSTYPE: "$OSTYPE"
-          if [[ "$OSTYPE" == "linux-gnu" ]]; then
+          if [ "$OSTYPE" = "linux-gnu" ]; then
             export CC=/usr/bin/gcc-14
             export CXX=/usr/bin/g++-14
             gcc -v

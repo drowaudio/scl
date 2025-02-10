@@ -10,6 +10,7 @@ jobs:
       matrix:
         build_config: [ Debug, Release ]
         # name: [ linux, macOS, windows ]
+        name: [ linux, macOS ]
         include:
           - name: Linux
             os: ubuntu-latest

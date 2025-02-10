@@ -15,3 +15,20 @@ This is an experiment to see how much of sync and send from Rust/Swift can be im
 - Template errors can be difficult to navigate
 - Just having to think about the types passed to scl types (e.g. safe_thread) can help the user think in a more thread-safe way
 
+___
+## To Do:
+### `sync`/`send`
+- [x] `scl::thread` - A safe thread that encapsulates running a thread and checks arguments to that thread conform to the send trait
+- [x] `scl::async` - Similar to `scl::thread` but around `std::async` 
+- [x] `scl::synchronized_value` - A wrapper around a mutex and an object to provide safe concurrent access to it, conforms to the `sync` trait
+- [ ] Reflection based implementation that checks `sync` recursively
+### Data race checker
+- [ ] `check_state` and `scoped_check` to manually check for data-races on function calls
+- [ ] `date_race_registry` to avoid having to use a `check_state` member
+### Meta-classes
+- [ ] `data_race_checked` - Checks for data races during every function call
+- [ ] `mutex` - Locks access during every function call, conforms to `sync`
+- [ ] `shared_mutex` - Locks shared access during every const function call, unique access otherwise, conforms to `sync`
+- [ ] `cow` copy-on-write
+- [ ] `arc` automatic-reference-counting
+- [ ] `actor` actor implementation using senders

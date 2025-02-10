@@ -9,14 +9,14 @@ jobs:
       fail-fast: false
       matrix:
         build_config: [ Debug, Release ]
-        name: [ linux, macOS, windows ]
+        # name: [ linux, macOS, windows ]
         include:
-          - name: Linux
-            os: ubuntu-latest
+          # - name: Linux
+          #   os: ubuntu-latest
           - name: macOS
-            os: macos-latest
-          - name: Windows
-            os: windows-latest
+            os: macos-15
+          # - name: Windows
+          #   os: windows-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

@@ -11,8 +11,8 @@ jobs:
         build_config: [ Debug, Release ]
         # name: [ linux, macOS, windows ]
         include:
-          # - name: Linux
-          #   os: ubuntu-latest
+          - name: Linux
+            os: ubuntu-latest
           - name: macOS
             os: macos-15
           # - name: Windows
@@ -23,13 +23,18 @@ jobs:
         with:
           submodules: true
 
-      - name: Configure
+      - name: Configure & Build
         shell: bash
-        run: cmake -B build_dir -DCMAKE_BUILD_TYPE=${{ matrix.build_config }}
+        run: |
+          if [[ "$OSTYPE" == "linux-gnu" ]]; then
+            export CC=/usr/bin/gcc-14
+            export CXX=/usr/bin/g++-14
+            gcc -v
+            g++ -v
+          fi
 
-      - name: Build
-        shell: bash
-        run: cmake --build build_dir --config ${{ matrix.build_config }}
+          cmake -B build_dir -DCMAKE_BUILD_TYPE=${{ matrix.build_config }}
+          cmake --build build_dir --config ${{ matrix.build_config }}
 
       - name: Run Tests
         working-directory: build_dir

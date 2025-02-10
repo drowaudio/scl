@@ -3,7 +3,7 @@
 #include <print>
 #include <ranges>
 #include <scl/safe_thread.h>
-#include <scl/syncronized_value.h>
+#include <scl/synchronized_value.h>
 
 using namespace std::literals;
 

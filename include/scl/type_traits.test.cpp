@@ -2,7 +2,7 @@
 // Created by David Rowland on 17/09/2024.
 //
 
-#include "type_traits.h"
+#include "utils/type_traits.h"
 #include <memory>
 #include <print>
 #include <string>
@@ -158,4 +158,9 @@ void test()
         static_assert (is_lambda_v<TestCallable>);
         static_assert (std::is_class_v<TestCallable>);
     }
+}
+
+int main()
+{
+    test();
 }

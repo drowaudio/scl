@@ -25,11 +25,11 @@ jobs:
 
       - name: Configure
         shell: bash
-        run: cmake -B build_dir -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}}
+        run: cmake -B build_dir -DCMAKE_BUILD_TYPE=${{ matrix.build_config }}
 
       - name: Build
         shell: bash
-        run: cmake --build build_dir --config ${{ env.BUILD_TYPE }}
+        run: cmake --build build_dir --config ${{ matrix.build_config }}
 
       - name: Run Tests
         working-directory: build_dir

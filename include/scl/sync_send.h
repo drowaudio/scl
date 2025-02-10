@@ -129,17 +129,32 @@ concept sync = (is_sync<Args>::value && ...);
 template <typename T>
 struct is_send : std::integral_constant<
                     bool,
-                    (! (std::is_lvalue_reference_v<T>
-                        || (std::is_pointer_v<std::remove_extent_t<T>>
+                    (! ((std::is_lvalue_reference_v<T>
+                         && ! std::is_function_v<std::remove_cvref_t<T>>)
+                        || (std::is_pointer_v<std::remove_extent_t<std::decay_t<T>>>
                             && ! is_function_pointer_v<std::decay_t<T>>)  // This shouldn't include non-member function pointers
                         || is_lambda_v<T>))
                     &&
                     (std::is_move_constructible_v<T>
                      || (is_function_pointer_v<std::decay_t<T>>
-                         && ! std::is_member_function_pointer_v<T>)
+                         && ! std::is_member_function_pointer_v<std::decay_t<T>>)
+                     || std::is_function_v<std::decay_t<T>>
                      || is_sync_v<T>)>
 {};
 
+// Test doing function first
+// template <typename T>
+// struct is_send : std::integral_constant<
+//                     bool,
+//                     (std::is_function_v<std::remove_cvref_t<T>>
+//                      && ! std::is_member_function_pointer_v<std::decay_t<T>>)
+//                     &&
+//                         (! is_lambda_v<T>
+//                         || (std::is_rvalue_reference_v<std::remove_extent_t<std::remove_cv_t<T>>>
+//                             && std::is_move_constructible_v<T>)
+//                         || is_sync_v<T>)>
+//
+// {};
 
 // template<typename T> struct is_send<T*&>        : std::false_type {};
 // template<typename T> struct is_send<T*&&>       : std::false_type {};
@@ -193,7 +208,6 @@ template<typename T>
 concept send = is_send<T>::value;
 
 
-
 //======================================================
 // Tests
 //======================================================
@@ -209,6 +223,7 @@ static_assert(! is_send_v<const std::string&>);
 static_assert(! is_send_v<std::string*&>);
 static_assert(! is_send_v<const std::string*&>);
 static_assert(is_send_v<void (*)(int)>);
+static_assert(is_send_v<void (&)(int)>);
 
 static_assert(! is_sync_v<int>);
 static_assert(! is_sync_v<int&>);

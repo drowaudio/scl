@@ -2,7 +2,7 @@
 #include <memory>
 #include <print>
 #include <ranges>
-#include "../safe_thread.h"
+#include <scl/safe_thread.h>
 
 using namespace std::literals;
 
@@ -13,7 +13,7 @@ void entry_point (int* tid)
 
 int main()
 {
-    std::vector<safe_thread> threads { };
+    std::vector<scl::thread> threads { };
 
     {
         // Launch all threads.
@@ -22,11 +22,11 @@ int main()
         for (int i : std::views::iota (0, num_threads))
         {
             auto i_ptr = &i;
-            threads.push_back (safe_thread (entry_point, i_ptr));
+            threads.push_back (scl::thread (entry_point, i_ptr));
         }
     }
 
     // Join all threads.
-    for (safe_thread& t : threads)
+    for (scl::thread& t : threads)
         t.join();
 }

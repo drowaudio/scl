@@ -1,7 +1,7 @@
 #include <functional>
 #include <memory>
 #include <print>
-#include "../safe_thread.h"
+#include <scl/safe_thread.h>
 
 using namespace std::literals;
 
@@ -16,13 +16,13 @@ public:
 
         // static_assert(is_send_v<decltype(std::mem_fn (&thread_runner::run))>);
         // static_assert(is_send_v<std::decay_t<decltype(std::mem_fn (&thread_runner::run))>>);
-        thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), unchecked_pointer (this));
+        thread = std::make_unique<scl::thread> (std::mem_fn (&thread_runner::run), unchecked_pointer (this));
         // thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), this_wrapper<const thread_runner> (const_cast<const thread_runner*> (this)));
         // thread = std::make_unique<safe_thread> (std::mem_fn (&thread_runner::run), const_cast<const thread_runner*> (this));
     }
 
 private:
-    std::unique_ptr<safe_thread> thread;
+    std::unique_ptr<scl::thread> thread;
 
     void run() const
     {

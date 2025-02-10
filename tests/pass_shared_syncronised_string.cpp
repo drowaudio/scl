@@ -2,8 +2,8 @@
 #include <memory>
 #include <print>
 #include <ranges>
-#include "../safe_thread.h"
-#include "../syncronized_value.h"
+#include <scl/safe_thread.h>
+#include <scl/syncronized_value.h>
 
 using namespace std::literals;
 
@@ -24,7 +24,7 @@ static_assert(is_send_v<decltype(entry_point)>);
 
 int main()
 {
-    std::vector<safe_thread> threads { };
+    std::vector<scl::thread> threads { };
 
     {
         //s dies before the threads join, so possible
@@ -34,10 +34,10 @@ int main()
         const int num_threads = 15;
 
         for (int i : std::views::iota (0, num_threads))
-            threads.push_back (safe_thread (entry_point, auto (s), auto (i)));
+            threads.push_back (scl::thread (entry_point, auto (s), auto (i)));
     }
 
     // Join all threads.
-    for (safe_thread& t : threads)
+    for (scl::thread& t : threads)
         t.join();
 }

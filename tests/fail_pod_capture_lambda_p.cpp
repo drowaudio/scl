@@ -2,23 +2,23 @@
 #include <memory>
 #include <print>
 #include <ranges>
-#include "../safe_thread.h"
+#include <scl/safe_thread.h>
 
 using namespace std::literals;
 
 int main()
 {
-    std::vector<safe_thread> threads { };
+    std::vector<scl::thread> threads { };
 
     {
         // Launch all threads.
         const int num_threads = 15;
 
         for (int i : std::views::iota (0, num_threads))
-            threads.push_back (safe_thread ([i] { std::print ("Hello safe_thread {}", i); }));
+            threads.push_back (scl::thread ([i] { std::print ("Hello safe_thread {}", i); }));
     }
 
     // Join all threads.
-    for (safe_thread& t : threads)
+    for (scl::thread& t : threads)
         t.join();
 }

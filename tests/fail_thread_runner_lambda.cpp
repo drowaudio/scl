@@ -1,7 +1,7 @@
 #include <functional>
 #include <memory>
 #include <print>
-#include "../safe_thread.h"
+#include <scl/safe_thread.h>
 
 using namespace std::literals;
 
@@ -10,11 +10,11 @@ class thread_runner
 public:
     thread_runner()
     {
-        thread = std::make_unique<safe_thread> ([this] { run(); });
+        thread = std::make_unique<scl::thread> ([this] { run(); });
     }
 
 private:
-    std::unique_ptr<safe_thread> thread;
+    std::unique_ptr<scl::thread> thread;
 
     void run() const
     {

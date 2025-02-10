@@ -5,7 +5,6 @@ on:
 
 jobs:
   build:
-    name: Pluginval Build
     strategy:
       fail-fast: false
       matrix:
@@ -26,7 +25,7 @@ jobs:
 
       - name: Configure
         shell: bash
-        run: cmake -B -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} .
+        run: cmake -B . -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}}
 
       - name: Build
         shell: bash

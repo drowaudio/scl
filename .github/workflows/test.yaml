@@ -29,7 +29,7 @@ jobs:
 
       - name: Build
         shell: bash
-        run: cmake --build --config ${{ env.BUILD_TYPE }}
+        run: cmake --build . --config ${{ env.BUILD_TYPE }}
 
       - name: Run Tests
         working-directory: ${{ env.APP_DIR }}

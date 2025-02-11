@@ -7,7 +7,7 @@
 
 using namespace std::literals;
 
-void entry_point (std::shared_ptr<synchronized_value<std::string>> sync_s, int tid)
+void entry_point (std::shared_ptr<scl::synchronized_value<std::string>> sync_s, int tid)
 {
     apply ( [tid] (auto& s) {
         s.append ("🔥");
@@ -17,10 +17,10 @@ void entry_point (std::shared_ptr<synchronized_value<std::string>> sync_s, int t
     *sync_s);
 }
 
-static_assert(is_function_pointer_v<std::decay_t<decltype(entry_point)>>);
+static_assert(scl::is_function_pointer_v<std::decay_t<decltype(entry_point)>>);
 static_assert(! std::is_member_function_pointer_v<std::decay_t<decltype(entry_point)>>);
 static_assert(! std::is_member_function_pointer_v<decltype(entry_point)>);
-static_assert(is_send_v<decltype(entry_point)>);
+static_assert(scl::is_send_v<decltype(entry_point)>);
 
 int main()
 {
@@ -28,7 +28,7 @@ int main()
 
     {
         //s dies before the threads join, so possible
-        auto s = std::make_shared<synchronized_value<std::string>> ("Hello threads");
+        auto s = std::make_shared<scl::synchronized_value<std::string>> ("Hello threads");
 
         // Launch all threads.
         const int num_threads = 15;

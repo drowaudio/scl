@@ -7,7 +7,7 @@
 
 #include "sync_send.h"
 
-
+namespace scl {
 template<typename Type>
 class synchronized_value
 {
@@ -43,3 +43,5 @@ struct is_send<synchronized_value<T>&> : std::true_type {};
 
 template<typename T>
 struct is_sync<synchronized_value<T>> : std::true_type {};
+
+}

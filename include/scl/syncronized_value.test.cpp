@@ -2,7 +2,7 @@
 #include <cassert>
 #include "synchronized_value.h"
 
-synchronized_value<std::string> s;
+scl::synchronized_value<std::string> s;
 
 std::string read_value() {
     return apply([](auto &x) {  return x; }, s);
@@ -18,7 +18,7 @@ void test_single() {
 }
 
 void test_multi() {
-    synchronized_value<int> a(1), b(2), c(3);
+    scl::synchronized_value<int> a(1), b(2), c(3);
     int sum = apply([](auto &...ints) { return (ints++ + ...); }, a, b, c);
     assert(sum == 6);
     auto get = [](int &i) { return i; };
@@ -37,9 +37,9 @@ struct person
 };
 
 template<>
-struct is_sync<person> : std::true_type {};
+struct scl::is_sync<person> : std::true_type {};
 
-static_assert(is_send_v<person>);
+static_assert(scl::is_send_v<person>);
 
 int main()
 {

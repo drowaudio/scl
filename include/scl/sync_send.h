@@ -8,6 +8,7 @@
 #include <mutex>
 #include <atomic>
 
+namespace scl {
 /**
     A wrapper that can be used around pointers to allow the this pointer to be passed.
     There's nothing special about this, it's just a dump pointer but means we can
@@ -231,3 +232,5 @@ static_assert(! is_sync_v<const int&>);
 static_assert(! is_sync_v<std::string&>);
 static_assert(! is_sync_v<const std::string&>);
 static_assert(is_sync_v<std::atomic<int>>);
+
+}

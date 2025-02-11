@@ -16,9 +16,9 @@ static_assert(! std::is_object_v<decltype(entry_point)>);
 static_assert(! std::is_member_function_pointer_v<decltype(entry_point)>);
 static_assert(! std::is_pointer_v<decltype(entry_point)>);
 
-static_assert(is_function_pointer_v<std::decay_t<decltype(entry_point)>>
+static_assert(scl::is_function_pointer_v<std::decay_t<decltype(entry_point)>>
                 && ! std::is_member_function_pointer_v<decltype(entry_point)>);
-static_assert(is_function_pointer_v<std::decay_t<decltype(entry_point)>>
+static_assert(scl::is_function_pointer_v<std::decay_t<decltype(entry_point)>>
                 && ! std::is_member_function_pointer_v<decltype(entry_point)>);
 
 int main()

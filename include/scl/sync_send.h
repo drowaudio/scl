@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <mutex>
 #include <atomic>
+#include <memory>
 
 namespace scl {
 /**

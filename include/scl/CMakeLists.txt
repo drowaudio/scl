@@ -7,7 +7,12 @@ include(../../cmake/icm_testing.cmake)
 # Global include for icm based tests
 include_directories("../include")
 
-file(GLOB_RECURSE pass_files LIST_DIRECTORIES false "${CMAKE_CURRENT_SOURCE_DIR}" *.test.cpp)
+icm_glob_build_failure_tests(
+    PATTERN fail_*
+    ERROR_MATCHES ${ERROR_STRING}
+)
+
+file(GLOB pass_files LIST_DIRECTORIES false "${CMAKE_CURRENT_SOURCE_DIR}" pass_*.cpp)
 message(pass_files: ${pass_files})
 
 foreach(pass_file ${pass_files})

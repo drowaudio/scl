@@ -129,8 +129,7 @@ concept sync = (is_sync<Args>::value && ...);
 //    - OR a pointer to a non-member (global) function
 //    - OR the type is sync
 template <typename T>
-struct is_send : std::integral_constant<
-                    bool,
+struct is_send : std::bool_constant<
                     (! ((std::is_lvalue_reference_v<T>
                          && ! std::is_function_v<std::remove_cvref_t<T>>)
                         || (std::is_pointer_v<std::remove_extent_t<std::decay_t<T>>>
@@ -143,6 +142,37 @@ struct is_send : std::integral_constant<
                      || std::is_function_v<std::decay_t<T>>
                      || is_sync_v<T>)>
 {};
+
+// This tries to mimic the logic in the reflection is_send_type function but has compile template errors...
+// template <typename T>
+// struct is_send_test :
+//     std::bool_constant<std::conditional_t<std::is_function<std::remove_pointer_t<std::remove_cvref_t<T>>>::type,
+// std::false_type,
+// std::true_type>::type>
+//                      // std::negate<std::is_member_function_pointer<std::remove_cvref_t<T>>>,
+//                      // std::conditional<std::is_lvalue_reference_v<std::remove_extent_t<T>>
+//                      //                  || std::is_pointer_v<T>,
+//                      //                  std::false_type,
+//                      //                  std::conditional<std::is_arithmetic_v<T>,
+//                      //                                   std::true_type,
+//                      //                                   std::is_rvalue_reference<T>>>>::type>
+// {};
+//
+// static_assert(is_send_test<int>::value);
+
+//                     bool,
+//                     (! ((std::is_lvalue_reference_v<T>
+//                          && ! std::is_function_v<std::remove_cvref_t<T>>)
+//                         || (std::is_pointer_v<std::remove_extent_t<std::decay_t<T>>>
+//                             && ! is_function_pointer_v<std::decay_t<T>>)  // This shouldn't include non-member function pointers
+//                         || is_lambda_v<T>))
+//                     &&
+//                     (std::is_move_constructible_v<T>
+//                      || (is_function_pointer_v<std::decay_t<T>>
+//                          && ! std::is_member_function_pointer_v<std::decay_t<T>>)
+//                      || std::is_function_v<std::decay_t<T>>
+//                      || is_sync_v<T>)>
+// {};
 
 // Test doing function first
 // template <typename T>

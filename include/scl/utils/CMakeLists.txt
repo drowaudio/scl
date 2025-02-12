@@ -14,8 +14,7 @@ foreach(test_file ${test_files})
     get_filename_component(name_without_extension "${test_file}" NAME_WE)
     icm_add_test(
         NAME ${name_without_extension}
-        SOURCES ${test_file}
-    )
+        SOURCES ${test_file})
 
     if(MATCHES ${test_file} fail_*)
         set_tests_properties(${name_without_extension} PROPERTIES

@@ -23,6 +23,13 @@
 // A writer enters a function and there is an active writer
 // A writer enters a function and there is an active reader
 //
+// N.B. This checks for recursion but there is a false positive if:
+// - A write starts
+// - A read on a separate thread starts
+// - That read finishes
+// - The original write continues but a data race is flagged
+// Although there is technically no race, this is probably unintended behaviour
+//
 // Wait-free? (maybe the CMPX is only lock-free?)
 
 namespace scl {
@@ -36,6 +43,7 @@ namespace scl {
 struct check_state
 {
     std::atomic<size_t> num_readers { 0 };
+    std::atomic<std::thread::id> last_thread_id { std::thread::id() };
     std::atomic<bool> is_writing { false };
 };
 
@@ -52,22 +60,37 @@ bool can_read (const check_state& state)
 //==========================================
 void read_started (check_state& state)
 {
+    auto this_thread_id = std::this_thread::get_id();
+    auto last_thread_id = state.last_thread_id.exchange (this_thread_id);
+
     ++state.num_readers; // must be first
 
     if (state.is_writing)
-        DATA_RACE_DETECTED
-    // read during active write
+    {
+        if (last_thread_id != this_thread_id)
+        { DATA_RACE_DETECTED }
+        // read during active write
+    }
 }
 
 void write_started (check_state& state)
 {
+    auto this_thread_id = std::this_thread::get_id();
+    auto last_thread_id = state.last_thread_id.exchange (this_thread_id);
+
     if (state.is_writing.exchange (true))  // must be first
-        DATA_RACE_DETECTED
-    // write during active write
+    {
+        if (last_thread_id != this_thread_id)
+        { DATA_RACE_DETECTED }
+        // write during active write
+    }
 
     if (state.num_readers > 0)
-        DATA_RACE_DETECTED
-    // write during active read
+    {
+        if (last_thread_id != this_thread_id)
+        { DATA_RACE_DETECTED }
+        // write during active read
+    }
 }
 
 void read_ended (check_state& state)

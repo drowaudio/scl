@@ -14,7 +14,7 @@ int main()
         // Launch all threads.
         const int num_threads = 15;
 
-        for (int i : std::views::iota (0, num_threads))
+        for ([[maybe_unused]] int i : std::views::iota (0, num_threads))
             threads.push_back (scl::thread ([] { std::print ("Hello scl::thread"); }));
     }
 

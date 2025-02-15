@@ -15,9 +15,9 @@ int main()
         const int num_threads = 15;
         int mol = 42;
 
-        for (int i : std::views::iota (0, num_threads))
+        for ([[maybe_unused]] int i : std::views::iota (0, num_threads))
         {
-            static_assert(! is_send_v<decltype([&mol] {})>);
+            static_assert(! scl::is_send_v<decltype([&mol] { (void) mol; })>);
             threads.push_back (scl::thread ([&mol] { std::print ("Hello safe_thread {}", mol); }));
         }
     }

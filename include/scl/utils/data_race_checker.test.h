@@ -124,12 +124,12 @@ inline void test_no_data_race()
   // Then only read from the vector - no data race
   std::vector<std::thread> threads;
 
-  for (auto _ : std::ranges::iota_view (0, 3))
+  for ([[maybe_unused]] auto _ : std::ranges::iota_view (0, 3))
     threads.emplace_back([&]
                        {
-                         for (auto _ : std::ranges::iota_view (0uz, 1'000'000uz))
+                         for ([[maybe_unused]] auto _ : std::ranges::iota_view (0uz, 1'000'000uz))
                          {
-                           volatile auto c = 0uz;
+                           [[maybe_unused]] volatile auto c = 0uz;
 
                            if (! vec.empty())
                              c = vec[vec.size() - 1];
@@ -156,12 +156,12 @@ inline void test_data_race()
                        }
                      });
 
-  for (auto _ : std::ranges::iota_view (0, 3))
+  for ([[maybe_unused]] auto _ : std::ranges::iota_view (0, 3))
     threads.emplace_back([&]
                        {
                          for (;;)
                          {
-                           volatile auto c = 0uz;
+                           [[maybe_unused]] volatile auto c = 0uz;
 
                            if (! vec.empty())
                              c = vec[vec.size() - 1];
@@ -183,12 +183,12 @@ inline void test_no_data_race_read_read()
   // Then only read from the vector - no data race
   std::vector<std::thread> threads;
 
-  for (auto _ : std::ranges::iota_view (0, 3))
+  for ([[maybe_unused]] auto _ : std::ranges::iota_view (0, 3))
     threads.emplace_back([&]
                        {
-                         for (auto _ : std::ranges::iota_view (0uz, 1'000'000uz))
+                         for ([[maybe_unused]] auto _ : std::ranges::iota_view (0uz, 1'000'000uz))
                          {
-                           volatile auto c = 0uz;
+                           [[maybe_unused]] volatile auto c = 0uz;
 
                            if (! vec.empty())
                              c = vec[vec.size() - 1];

@@ -10,7 +10,7 @@ class thread_runner
 public:
     thread_runner()
     {
-        static_assert(! is_send_v<decltype([this] { return this; })>);
+        static_assert(! scl::is_send_v<decltype([this] { return this; })>);
         int i = 42;
         auto i_ptr = &i;
         thread = std::make_unique<scl::thread> (std::mem_fn (&thread_runner::run), this, i_ptr);

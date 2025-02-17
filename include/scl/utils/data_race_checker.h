@@ -16,9 +16,11 @@
 #ifdef __GNUC__
  #pragma GCC diagnostic push
  #pragma GCC diagnostic ignored "-Wtype-limits"
+#endif
 
 #include "extrinsic_storage.h"
 
+#ifdef __GNUC__
  #pragma GCC diagnostic pop
 #endif
 

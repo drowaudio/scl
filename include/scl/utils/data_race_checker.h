@@ -13,7 +13,14 @@
 #include <vector>
 #include <atomic>
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wtype-limits"
+
 #include "extrinsic_storage.h"
+
+ #pragma GCC diagnostic pop
+#endif
 
 // No Data race:
 // A reader enters a function and there is an active reader

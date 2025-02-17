@@ -2,6 +2,8 @@
 // Created by David Rowland on 11/02/2025.
 //
 
+#include <print>
+
 #define DATA_RACE_DETECTED { std::println ("ERROR: data race detected"); std::exit(1); }
 #include "data_race_checker.test.h"
 

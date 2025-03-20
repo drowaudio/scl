@@ -41,6 +41,20 @@
 //
 // Wait-free? (maybe the CMPX is only lock-free?)
 
+/** @note
+ *  There's a bit of a debate if using the stack pointer (address of a local variable)
+ *  is quicker than getting the thread ID. A rudimentary benchmark (below) shows
+ *  getting this is the same on clang 17 and GCC 13.2:
+ *  https://quick-bench.com/q/iTnk1X3mGYUQ2yryuK_Wcg6JJ6Q
+ *
+ *  When detecting if there is a data-race, comparing thread IDs is very quick. I
+ *  would expect finding if two addresses are on the same stack is more costly as
+ *  it involves extra calls to get the base stack address. It's also more complex
+ *  in terms of code. Ultimately however, real-word benchmarks would need to be
+ *  created to compare without a data_race_checker, one using thread IDs and one
+ *  using addresses.
+*/
+
 namespace scl {
 
 #ifndef DATA_RACE_DETECTED
